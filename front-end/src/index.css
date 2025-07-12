@@ -1,0 +1,21 @@
+@import "@fontsource/inter/index.css";
+@import "@fontsource/orbitron/index.css";
+@import "@fontsource/eb-garamond";
+@import "@fontsource/lobster-two";
+@import "@fontsource/museomoderno";
+@import "@fontsource/jura";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  @apply bg-gradient-to-br from-yellow-200 via-blue-300 to-orange-500;
+  @apply font-lobster;
+}
+
+.input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-md text-sm;
+}

@@ -1,0 +1,46 @@
+{
+  "name": "fanzboost-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/chakra-petch": "^5.2.6",
+    "@fontsource/eb-garamond": "^5.2.6",
+    "@fontsource/inter": "^5.2.6",
+    "@fontsource/jura": "^5.2.6",
+    "@fontsource/lobster-two": "^5.2.6",
+    "@fontsource/museomoderno": "^5.2.6",
+    "@fontsource/orbitron": "^5.2.6",
+    "@fontsource/rajdhani": "^5.2.6",
+    "@fontsource/saira": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.8",
+    "@headlessui/react": "^2.2.4",
+    "@heroicons/react": "^2.2.0",
+    "axios": "^1.10.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.6.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.3",
+    "vite": "^7.0.4"
+  }
+}
