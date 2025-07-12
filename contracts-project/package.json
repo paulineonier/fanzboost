@@ -1,0 +1,31 @@
+{
+    "name": "contracts-project",
+    "version": "1.0.0",
+    "description": "Projet smart contracts pour FanzBoost avec Hardhat et OpenZeppelin",
+    "main": "index.js",
+    "scripts": {
+        "compile": "hardhat compile",
+        "test": "hardhat test",
+        "deploy": "hardhat run scripts/deploy.js --network localhost",
+        "deploy:rinkeby": "hardhat run scripts/deploy.js --network rinkeby"
+    },
+    "keywords": [
+        "hardhat",
+        "openzeppelin",
+        "smart-contracts",
+        "erc721",
+        "nft",
+        "blockchain"
+    ],
+    "author": "TonNom",
+    "license": "MIT",
+    "devDependencies": {
+        "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+        "@openzeppelin/contracts": "^4.9.0",
+        "dotenv": "^16.3.1",
+        "hardhat": "^2.17.0"
+    },
+    "dependencies": {
+        "ethers": "^6.15.0"
+    }
+}
