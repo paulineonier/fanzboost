@@ -1,5 +1,5 @@
 const chilizClient = require('../chilizClient');
-const Bet = require('../models/Bet');
+const Bet = require('../models/Bets');
 
 exports.placeBet = async (req, res) => {
   const { userId, matchId, betType, token, amount } = req.body;
