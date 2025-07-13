@@ -1,10 +1,12 @@
 // src/pages/Home.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaGift, FaStar, FaTicketAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { Web3UserContext } from '../context/Web3UserContext';
 
 export default function Home() {
     const navigate = useNavigate();
+    const { user, setUser } = useContext(Web3UserContext);
 
     const handleBetClick = (matchId, matchTitle, teams) => {
         navigate('/bet', {
@@ -15,6 +17,13 @@ export default function Home() {
             },
         });
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        setUser(null);
+    };
+
+    const shortAddress = (addr) => addr.slice(0, 6) + '...' + addr.slice(-4);
 
     return (
         <div className="min-h-screen text-gray-900 px-4 py-6 max-w-5xl mx-auto space-y-10">
@@ -31,13 +40,36 @@ export default function Home() {
                     <h1 className="font-orbitron text-3xl sm:text-4xl text-black font-bold tracking-tight">FanzBoost</h1>
                 </div>
 
-                {/* Bouton de Connexion */}
-                <button
-                    onClick={() => navigate('/login')}
-                    className="mt-2 sm:mt-0 bg-black text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-gray-800 transition"
-                >
-                    Connect Wallet
-                </button>
+                {/* Profil utilisateur ou bouton de connexion */}
+                {user ? (
+                    <div className="flex items-center space-x-3">
+                        <div className="flex flex-col items-end">
+                            <p
+                                onClick={() => navigate('/profile')}
+                                className="text-sm font-bold cursor-pointer hover:underline"
+                            >
+                                {shortAddress(user.address)}
+                            </p>
+                            <span className="text-xs text-gray-500">{user.balance} CHZ</span>
+                        </div>
+                        <div className="bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                            Gold
+                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 text-white text-xs px-3 py-1 rounded hover:bg-red-600 transition"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        onClick={() => navigate('/login')}
+                        className="mt-2 sm:mt-0 bg-black text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-gray-800 transition"
+                    >
+                        Connect Wallet
+                    </button>
+                )}
             </header>
 
             {/* Hero */}
@@ -61,6 +93,7 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Live Matches */}
             <section>
                 <h3 className="text-lg font-semibold mb-3">Live Matches</h3>
                 <div className="space-y-4">
@@ -99,18 +132,9 @@ export default function Home() {
             <section>
                 <h3 className="text-lg font-semibold mb-3">Fan Rewards</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div className="bg-gray-100 p-4 rounded-xl flex flex-col items-center justify-center">
-                        <FaGift className="text-4xl text-orange-500 mb-2" />
-                        <p className="text-center">Exclusive NFT</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-xl flex flex-col items-center justify-center">
-                        <FaStar className="text-4xl text-yellow-500 mb-2" />
-                        <p className="text-center">XP Points</p>
-                    </div>
-                    <div className="bg-gray-100 p-4 rounded-xl flex flex-col items-center justify-center">
-                        <FaTicketAlt className="text-4xl text-green-600 mb-2" />
-                        <p className="text-center">Merch & Tickets</p>
-                    </div>
+                    <RewardCard title="Exclusive NFT" icon={<FaGift className="text-4xl text-orange-500 mb-2" />} />
+                    <RewardCard title="XP Points" icon={<FaStar className="text-4xl text-yellow-500 mb-2" />} />
+                    <RewardCard title="Merch & Tickets" icon={<FaTicketAlt className="text-4xl text-green-600 mb-2" />} />
                 </div>
             </section>
 
@@ -153,7 +177,7 @@ function Step({ icon, title }) {
 function RewardCard({ title, icon }) {
     return (
         <div className="bg-gray-100 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm">
-            <img src={icon} alt="Reward" className="h-10 mb-2" />
+            {icon}
             <p className="text-sm font-medium">{title}</p>
         </div>
     );

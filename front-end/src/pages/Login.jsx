@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
+import { Web3UserContext } from '../context/Web3UserContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setUser } = useContext(Web3UserContext);
 
   const handleConnect = async () => {
     try {
@@ -13,33 +15,39 @@ export default function Login() {
         return;
       }
 
-      // Étape 1: Récupère l'adresse
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send('eth_requestAccounts', []);
+      // 1. Connexion avec MetaMask
+      const metaProvider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await metaProvider.send('eth_requestAccounts', []);
       const address = accounts[0];
 
-      // Étape 2: Demande le message à signer
-      const res1 = await axios.post('http://localhost:3000/auth/web3/request-message', {
+      // 2. Signature
+      const { data: { message } } = await axios.post('http://localhost:3000/auth/web3/request-message', {
         address,
       });
 
-      const message = res1.data.message;
-
-      // Étape 3: Signature
-      const signer = await provider.getSigner();
+      const signer = await metaProvider.getSigner();
       const signature = await signer.signMessage(message);
 
-      // Étape 4: Vérifie la signature
-      const res2 = await axios.post('http://localhost:3000/auth/web3/verify-signature', {
+      const { data: { token } } = await axios.post('http://localhost:3000/auth/web3/verify-signature', {
         address,
         signature,
       });
 
-      const { token } = res2.data;
-      localStorage.setItem('authToken', token); // facultatif
-      alert('✅ Login success!');
+      localStorage.setItem('authToken', token);
 
-      navigate('/'); // redirection
+      // 3. Lecture du solde via un provider RPC direct vers Chiliz Spicy Testnet
+      const spicyProvider = new ethers.JsonRpcProvider('https://spicy-rpc.chiliz.com');
+      const balanceWei = await spicyProvider.getBalance(address);
+      const chzBalance = ethers.formatEther(balanceWei); // ex: "100.0"
+
+      setUser({
+        address,
+        token,
+        balance: chzBalance,
+      });
+
+      alert('✅ Login success!');
+      navigate('/');
 
     } catch (err) {
       console.error('❌ Login error:', err);

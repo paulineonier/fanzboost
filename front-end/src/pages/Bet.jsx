@@ -1,15 +1,14 @@
-// src/pages/Bet.jsx
-import React, { useState, Fragment } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { Web3UserContext } from '../context/Web3UserContext';
 
 export default function Bet() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { user } = useContext(Web3UserContext);
 
-  // Default fallback in case no match data is passed
   const matchData = location.state || {
     matchId: 'match_psg_chelsea',
     matchTitle: 'FIFA Club World Cup - Final: PSG vs Chelsea',
@@ -22,11 +21,11 @@ export default function Bet() {
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState(null);
 
-  const isWalletConnected = Boolean(userId);
-
-  const handleConnectWallet = () => {
-    setUserId('user12345'); // simulate wallet
-  };
+  useEffect(() => {
+    if (user?.address) {
+      setUserId(user.address);
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,13 +53,8 @@ export default function Bet() {
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6">
         <h2 className="text-2xl font-bold mb-6 text-center font-fan">Place Your Bet</h2>
 
-        {!isWalletConnected ? (
-          <button
-            onClick={handleConnectWallet}
-            className="w-full bg-black text-white px-5 py-2 rounded hover:bg-gray-800"
-          >
-            Connect Chiliz Wallet
-          </button>
+        {!userId ? (
+          <p className="text-center text-red-600">Please connect your wallet first.</p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -96,9 +90,7 @@ export default function Bet() {
                       >
                         {({ selected }) => (
                           <>
-                            <span className={`block truncate ${selected ? 'font-semibold' : ''}`}>
-                              {team}
-                            </span>
+                            <span className={`block truncate ${selected ? 'font-semibold' : ''}`}>{team}</span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-green-600">
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
@@ -114,7 +106,7 @@ export default function Bet() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Token (e.g. CHZ)</label>
+              <label className="block text-sm font-medium mb-1">Token</label>
               <input
                 type="text"
                 value={token}
